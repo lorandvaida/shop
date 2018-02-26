@@ -22,13 +22,13 @@ public class ProductRepo {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    //@Transactional(readOnly=true)
+    @Transactional(readOnly=true)
     public List<Product> findAllProduct() {
 
         return jdbcTemplate.query("select * from product", new ProductRowMapper());
     }
 
-    //@Transactional(readOnly=true)
+    @Transactional(readOnly=true)
     public Product findProductById(int id) {
 
         return jdbcTemplate.queryForObject("select * ftom product where id=?",new Object[]{id}, new ProductRowMapper());

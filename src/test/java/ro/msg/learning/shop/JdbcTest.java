@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNotNull;
 @SpringBootTest
 public class JdbcTest {
 
+
     @Autowired
     private ProductRepo productRepo;
 
