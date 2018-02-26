@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS product;
+CREATE TABLE customer (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  description VARCHAR(100) NOT NULL,
+  price DECIMAL NOT NULL,
+  weight DOUBLE NOT NULL,
+  category INTEGER NOT NULL,
+  supplier INTEGER NOT NULL,
+  PRIMARY KEY (id));
