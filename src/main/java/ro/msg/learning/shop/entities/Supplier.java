@@ -6,9 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Null;
-import java.io.Serializable;
-import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -16,16 +13,10 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product implements Serializable {
+public class Supplier {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     private String name;
-    private String description;
-    private BigDecimal price;
-    private double weight;
-    private int category;
-    private int suplier;
-
 }

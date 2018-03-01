@@ -34,7 +34,7 @@ public class ProductController {
     @RequestMapping("/{id}/view")
     public String view(Model model, @PathVariable("id") long id) {
 
-        Product product = new Product("Celular","Camera VGA, Calitate buna.", new BigDecimal(499), 0.200, 1, 1);
+        Product product = new Product(0,"Celular","Camera VGA, Calitate buna.", new BigDecimal(499), 0.200, 1, 1);
 
         model.addAttribute(product);
 
