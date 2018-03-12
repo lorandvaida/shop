@@ -1,8 +1,12 @@
 package ro.msg.learning.shop.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ro.msg.learning.shop.entities.Product;
+import ro.msg.learning.shop.entities.ProductCategory;
+import ro.msg.learning.shop.entities.Supplier;
 import ro.msg.learning.shop.repositories.ProductRepository;
+import ro.msg.learning.shop.services.ProductService;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -11,24 +15,45 @@ import java.util.Arrays;
 @Component
 public class ProductInitializer {
 
-
-    private ProductRepository productRepository;
-
-    public ProductInitializer(ProductRepository productRepository) {
-
-        this.productRepository = productRepository;
-    }
+    @Autowired
+    private ProductService productService;
 
     @PostConstruct
     public void initProducts() {
 
-        Product p0 = new Product(0,"Celular","Camera VGA, Calitate buna.", new BigDecimal(499), 0.200, 1, 1);
-        Product p1 = new Product(0,"Covor","Covor persan adus din Ambipur.", new BigDecimal(1000), 3, 1, 1);
-        Product p2 = new Product(0,"Cofraj oua","Izolare fonica garantata.", new BigDecimal(1), 0.01, 1, 1);
-        Product p3 = new Product(0,"Coada de matura","Lungime cuprinsa intre 150 si 180 de cm.", new BigDecimal(29), 0.100, 1, 1);
-        Product p4 = new Product(0,"Televizor Sport Diamant","Televizor alb-negru, prinde TVR 1 fara probleme.", new BigDecimal(1599), 93, 1, 1);
+        ProductCategory productCategory = new ProductCategory();
+        productCategory.setName("Telefoane");
+        productCategory.setDescription("Aceasta categorie este dedicata telefoanelor");
 
-        productRepository.save(Arrays.asList(p0, p1, p2, p3, p4));
+        ProductCategory productCategory2 = new ProductCategory();
+        productCategory2.setName("Electrocasnice");
+        productCategory2.setDescription("Aceasta categorie este dedicata electrocasnicelor");
+
+        Supplier supplier = new Supplier();
+        supplier.setName("Altex");
+
+        Supplier supplier2 = new Supplier();
+        supplier2.setName("Emag");
+
+        Product product = new Product();
+        product.setName("Samsung");
+        product.setDescription("S9");
+        product.setPrice(new BigDecimal(499));
+        product.setWeight(0.200);
+        product.setCategory(productCategory);
+        product.setSupplier(supplier);
+
+        Product product2 = new Product();
+        product2.setName("Beko");
+        product2.setDescription("Frigider");
+        product2.setPrice(new BigDecimal(499));
+        product2.setWeight(0.200);
+        product2.setCategory(productCategory2);
+        product2.setSupplier(supplier2);
+
+        productService.saveProduct(product);
+        productService.saveProduct(product2);
+
     }
 
 }

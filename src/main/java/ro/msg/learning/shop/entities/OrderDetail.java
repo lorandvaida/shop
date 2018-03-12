@@ -2,10 +2,7 @@ package ro.msg.learning.shop.entities;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -18,7 +15,14 @@ public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
-    private int order;
-    private int product;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="order_id")
+    private Order order;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     private int quantity;
 }

@@ -2,12 +2,10 @@ package ro.msg.learning.shop.entities;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,10 +18,16 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
+
     private String name;
-    private String addressCountry;
-    private String addressCity;
-    private String addressCounty;
-    private String addressStreet;
+
+    @Embedded
+    private Address address;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
+    private List<Stock> stocks;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "shippedFrom")
+    private List<Order> orders;
 
 }
