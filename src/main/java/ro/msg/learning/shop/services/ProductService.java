@@ -40,7 +40,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public  void deleteProduct(int productId) {
+    public void deleteProduct(int productId) {
 
         productRepository.delete(productId);
     }
