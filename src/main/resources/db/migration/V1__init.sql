@@ -1,4 +1,3 @@
-
 /*
 CREATE TABLE IF NOT EXISTS product (
   id INT NOT NULL AUTO_INCREMENT,
@@ -60,12 +59,4 @@ CREATE TABLE IF NOT EXISTS order (
   address_county VARCHAR(100) NOT NULL,
   address_street VARCHAR(100) NOT NULL,
   PRIMARY KEY (id));
-
-insert into supplier (name) values ('supplier1');
-insert into supplier (name) values ('supplier2');
-insert into supplier (name) values ('supplier3');
-
-insert into product_category (name, description) values ('category1','productcategoryDecription1');
-insert into product_category (name, description) values ('category2','productcategoryDecription2');
-insert into product_category (name, description) values ('category3','productcategoryDecription3');
-*/
+  */

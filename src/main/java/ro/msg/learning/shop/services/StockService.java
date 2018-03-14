@@ -2,6 +2,9 @@ package ro.msg.learning.shop.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ro.msg.learning.shop.dto.CreateOrderDto;
+import ro.msg.learning.shop.entities.Location;
+import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.entities.Stock;
 import ro.msg.learning.shop.repositories.StockRepository;
 
@@ -17,6 +20,21 @@ public class StockService {
     public Stock readStock(int stockId) {
 
         return stockRepository.findOne(stockId);
+    }
+
+    public void  subtractStock(Product product, int quantity, Location location) {
+
+        List<Stock> allStocks = readStocks();
+
+        for(Stock stock : allStocks) {
+
+            if(stock.getProduct().getId() == product.getId() && stock.getLocation().getId() == location.getId() ) {
+
+                stock.setQuantity(stock.getQuantity() - quantity);
+                stockRepository.save(stock);
+            }
+        }
+
     }
 
     public List<Stock> readStocks() {

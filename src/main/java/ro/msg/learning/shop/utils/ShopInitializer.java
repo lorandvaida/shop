@@ -2,6 +2,8 @@ package ro.msg.learning.shop.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.entities.*;
 import ro.msg.learning.shop.repositories.ProductRepository;
 import ro.msg.learning.shop.services.*;
@@ -12,6 +14,21 @@ import java.util.Arrays;
 
 @Component
 public class ShopInitializer {
+
+    @Autowired
+    private InitService service;
+
+    @PostConstruct
+    public void initShop() {
+        service.initdb();
+    }
+}
+
+
+
+@Service
+@Transactional
+class InitService {
 
     @Autowired
     private CustomerService customerService;
@@ -30,8 +47,7 @@ public class ShopInitializer {
     @Autowired
     private SupplierService supplierService;
 
-    @PostConstruct
-    public void initShop() {
+    public void initdb() {
 
         //Product category
         ProductCategory productCategory = new ProductCategory();
