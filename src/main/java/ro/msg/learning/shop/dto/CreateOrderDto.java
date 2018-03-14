@@ -8,6 +8,7 @@ import ro.msg.learning.shop.entities.Address;
 import ro.msg.learning.shop.entities.OrderDetail;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,6 +18,6 @@ public class CreateOrderDto {
 
     private Timestamp orderTimestamp;
     private Address deliveryAddress;
-    private OrderDetail orderDetail;
+    private List<OrderDetail> orderDetailList;
 
 }

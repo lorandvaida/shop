@@ -5,15 +5,10 @@ import org.springframework.stereotype.Service;
 import ro.msg.learning.shop.dto.CreateOrderDto;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Order;
-import ro.msg.learning.shop.entities.Stock;
 import ro.msg.learning.shop.exceptions.NoLocationException;
 import ro.msg.learning.shop.repositories.OrderRepository;
 import ro.msg.learning.shop.strategy.LocationContext;
-import ro.msg.learning.shop.strategy.LocationStrategy;
 import ro.msg.learning.shop.strategy.SingleLocationStrategy;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CreateOrderService {
@@ -32,15 +27,16 @@ public class CreateOrderService {
 
         if(location != null) {
 
-            //make order, a location with stock was found
+            //a store was found, make order
 
             Order order = new Order();
             order.setShippedFrom(location);
             order.setAddress(createOrderDto.getDeliveryAddress());
+            order.setOrderDetails(createOrderDto.getOrderDetailList());
 
             orderRepository.save(order);
 
-            stockService.subtractStock(createOrderDto.getOrderDetail().getProduct(), createOrderDto.getOrderDetail().getQuantity(), location);
+            stockService.subtractStock(createOrderDto.getOrderDetailList(), location);
 
             return order;
         }
