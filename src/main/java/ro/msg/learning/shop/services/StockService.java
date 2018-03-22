@@ -7,6 +7,7 @@ import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.OrderDetail;
 import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.entities.Stock;
+import ro.msg.learning.shop.exceptions.NoLocationException;
 import ro.msg.learning.shop.repositories.StockRepository;
 
 import java.util.ArrayList;
@@ -35,7 +36,29 @@ public class StockService {
                 stockRepository.save(stock);
             }
         }
+    }
 
+    public List<Stock> getStockList(int locationId) {
+
+        List<Stock> allSotckList = readStocks();
+        List<Stock> resultStockList = new ArrayList<>();
+
+        for(Stock stock : allSotckList) {
+
+            if(locationId == stock.getLocation().getId()) {
+
+                resultStockList.add(stock);
+            }
+        }
+
+        if(resultStockList.isEmpty()) {
+
+            throw new NoLocationException(locationId);
+        }
+        else {
+
+            return resultStockList;
+        }
     }
 
     public void subtractStock(List<OrderDetail> orderDetailList, Location location) {

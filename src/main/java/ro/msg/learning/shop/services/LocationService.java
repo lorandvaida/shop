@@ -51,20 +51,4 @@ public class LocationService {
         locationRepository.deleteAll();
     }
 
-    public List<Stock> getStockList(int locationId) {
-
-        List<Stock> allSotckList = stockService.readStocks();
-        List<Stock> resultStockList = new ArrayList<>();
-
-        for(Stock stock : allSotckList) {
-
-            if(locationId == stock.getLocation().getId()) {
-
-                resultStockList.add(stock);
-            }
-        }
-
-        return resultStockList;
-    }
-
 }

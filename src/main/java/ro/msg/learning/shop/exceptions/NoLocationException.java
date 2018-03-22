@@ -1,9 +1,13 @@
 package ro.msg.learning.shop.exceptions;
 
-public class NoLocationException extends Exception {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-    public NoLocationException(String message) {
+@ResponseStatus(value= HttpStatus.NOT_FOUND) //404
+public class NoLocationException extends RuntimeException {
 
-        super(message);
+    public NoLocationException(int locationId) {
+
+        super("No location found with: " + locationId);
     }
 }

@@ -1,5 +1,6 @@
 package ro.msg.learning.shop.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class Supplier {
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "supplier")
+    @JsonIgnore
     private List<Product> products;
 
 }

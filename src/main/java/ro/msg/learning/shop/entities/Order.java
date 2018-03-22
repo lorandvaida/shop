@@ -1,5 +1,6 @@
 package ro.msg.learning.shop.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,16 +21,19 @@ public class Order {
 
     @ManyToOne(cascade = CascadeType.ALL, optional=false)
     @JoinColumn(name="location_id")
+    @JsonIgnore
     private Location shippedFrom;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="customer_id")
+    @JsonIgnore
     private Customer customer;
 
     @Embedded
     private Address address;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    @JsonIgnore
     private List<OrderDetail> orderDetails;
 
 }
