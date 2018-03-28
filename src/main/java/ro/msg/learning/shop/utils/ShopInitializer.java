@@ -5,12 +5,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.entities.*;
-import ro.msg.learning.shop.repositories.ProductRepository;
 import ro.msg.learning.shop.services.*;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class ShopInitializer {
@@ -46,6 +46,10 @@ class InitService {
     private StockService stockService;
     @Autowired
     private SupplierService supplierService;
+    @Autowired
+    private UserService userService;
+    //@Autowired
+    //private UserRoleRepository userRoleRepository;
 
     public void initdb() {
 
@@ -155,6 +159,30 @@ class InitService {
         //Save Order Detail
         orderDetailService.saveOrderDetail(orderDetail);
 
+        //create privilege
+        UserPrivilege userPrivilege = new UserPrivilege();
+        userPrivilege.setName("ALL");
+
+        List<UserPrivilege> userPrivilegeList = new ArrayList<>();
+        userPrivilegeList.add(userPrivilege);
+
+        //create user role
+        UserRole userRole = new UserRole();
+        userRole.setRole("CUSTOMER");
+        userRole.setPrivileges(userPrivilegeList);
+
+        List<UserRole> userRolesList = new ArrayList<>();
+        userRolesList.add(userRole);
+
+        //create user
+        User user = new User();
+        user.setUsername("user");
+        user.setPassword("user");
+        user.setEnabled(true);
+        user.setRoles(userRolesList);
+
+        //save user
+        userService.saveUser(user);
     }
 
 }

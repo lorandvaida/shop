@@ -1,5 +1,6 @@
 package ro.msg.learning.shop;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ro.msg.learning.shop.entities.ProductCategory;
