@@ -11,8 +11,12 @@ import java.util.List;
 @Service
 public class OrderDetailService {
 
+    private final OrderDetailRepository orderDetailRepository;
+
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
+    public OrderDetailService(OrderDetailRepository orderDetailRepository) {
+        this.orderDetailRepository = orderDetailRepository;
+    }
 
     public OrderDetail readOrderDetail(int orderDetailId) {
 

@@ -27,8 +27,12 @@ import java.util.logging.Logger;
 @RestController
 public class ProductController {
 
+    private final ProductService productService;
+
     @Autowired
-    private ProductService productService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @RequestMapping(value = "/products/{id}", method = RequestMethod.GET)
     public Product getPproduct(@PathVariable("id") int productId) {

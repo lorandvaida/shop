@@ -16,12 +16,22 @@ import java.util.List;
 @RestController
 public class StockController {
 
+    private final StockService stockService;
+
     @Autowired
-    private StockService stockService;
+    public StockController(StockService stockService) {
+        this.stockService = stockService;
+    }
 
     @RequestMapping(value = "/stockList/{id}", method = RequestMethod.GET)
     public List<StockDto> createOrder(@PathVariable("id") int locationId) throws Exception {
 
         return StockDtoMapper.stockListToStockDtoList(stockService.getStockList(locationId));
+    }
+
+    @RequestMapping(value = "/stockList", method = RequestMethod.GET)
+    public List<StockDto> createOrder() throws Exception {
+
+        return StockDtoMapper.stockListToStockDtoList(stockService.readStocks());
     }
 }

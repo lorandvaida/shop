@@ -11,8 +11,12 @@ import java.util.List;
 @Service
 public class ProductCategoryService {
 
+    private final ProductCategoryRepository productCategoryRepository;
+
     @Autowired
-    private ProductCategoryRepository productCategoryRepository;
+    public ProductCategoryService(ProductCategoryRepository productCategoryRepository) {
+        this.productCategoryRepository = productCategoryRepository;
+    }
 
     public ProductCategory readOrder(int productCategoryId) {
 

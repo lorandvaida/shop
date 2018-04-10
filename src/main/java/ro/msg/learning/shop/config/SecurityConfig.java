@@ -25,8 +25,6 @@ import java.util.List;
 @EnableWebMvcSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsServiceImpl;
     private final String[] authList = {"CUSTOMER"};
 
     @Bean

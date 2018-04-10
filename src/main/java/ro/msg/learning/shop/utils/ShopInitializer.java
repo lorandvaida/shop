@@ -15,8 +15,12 @@ import java.util.List;
 @Component
 public class ShopInitializer {
 
+    private final InitService service;
+
     @Autowired
-    private InitService service;
+    public ShopInitializer(InitService service) {
+        this.service = service;
+    }
 
     @PostConstruct
     public void initShop() {
@@ -30,24 +34,28 @@ public class ShopInitializer {
 @Transactional
 class InitService {
 
+    private final CustomerService customerService;
+    private final LocationService locationService;
+    private final OrderDetailService orderDetailService;
+    private final OrderService orderService;
+    private final ProductCategoryService productCategoryService;
+    private final ProductService productService;
+    private final StockService stockService;
+    private final SupplierService supplierService;
+    private final UserService userService;
+
     @Autowired
-    private CustomerService customerService;
-    @Autowired
-    private LocationService locationService;
-    @Autowired
-    private OrderDetailService orderDetailService;
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private ProductCategoryService productCategoryService;
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private StockService stockService;
-    @Autowired
-    private SupplierService supplierService;
-    @Autowired
-    private UserService userService;
+    public InitService(CustomerService customerService, LocationService locationService, OrderDetailService orderDetailService, OrderService orderService, ProductCategoryService productCategoryService, ProductService productService, StockService stockService, SupplierService supplierService, UserService userService) {
+        this.customerService = customerService;
+        this.locationService = locationService;
+        this.orderDetailService = orderDetailService;
+        this.orderService = orderService;
+        this.productCategoryService = productCategoryService;
+        this.productService = productService;
+        this.stockService = stockService;
+        this.supplierService = supplierService;
+        this.userService = userService;
+    }
     //@Autowired
     //private UserRoleRepository userRoleRepository;
 
@@ -72,15 +80,15 @@ class InitService {
         //Address
         Address address = new Address();
         address.setAddressCountry("Romania");
-        address.setAddressCity("Cluj");
-        address.setAddressCounty("Cj");
-        address.setAddressStreet("Str. Samuel Brassai Nr. 9");
+        address.setAddressCity("Oradea");
+        address.setAddressCounty("Bihor");
+        address.setAddressStreet("Strada Republicii");
 
         Address address2 = new Address();
         address2.setAddressCountry("Romania");
-        address2.setAddressCity("Cluj");
-        address2.setAddressCounty("Cj");
-        address2.setAddressStreet("Str. Aurel Vlaicu Nr. 44");
+        address2.setAddressCity("Cluj-Napoca");
+        address2.setAddressCounty("Cluj");
+        address2.setAddressStreet("Strada Aurel Vlaicu");
 
         //Location
         Location location = new Location();
@@ -113,6 +121,16 @@ class InitService {
         stock.setLocation(location);
         stock.setProduct(product);
         stock.setQuantity(23);
+
+        Stock stock2 = new Stock();
+        stock2.setLocation(location2);
+        stock2.setProduct(product);
+        stock2.setQuantity(10);
+
+        Stock stock3 = new Stock();
+        stock3.setLocation(location2);
+        stock3.setProduct(product2);
+        stock3.setQuantity(20);
 
         //Customer
         Customer customer = new Customer();
@@ -152,6 +170,8 @@ class InitService {
 
         //Save Stock
         stockService.saveStock(stock);
+        stockService.saveStock(stock2);
+        stockService.saveStock(stock3);
 
         //Save Order
         orderService.saveOrder(order);

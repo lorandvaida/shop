@@ -4,41 +4,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ro.msg.learning.shop.dto.CreateOrderDto;
 import ro.msg.learning.shop.entities.Location;
-import ro.msg.learning.shop.entities.OrderDetail;
-import ro.msg.learning.shop.entities.Stock;
-import ro.msg.learning.shop.services.StockService;
+import ro.msg.learning.shop.services.LocationService;
 
 import java.util.List;
 
 @Component
 public class SingleLocationStrategy implements  LocationStrategy {
 
+    private final LocationService locationService;
+
     @Autowired
-    private StockService stockService;
+    public SingleLocationStrategy(LocationService locationService) {
+        this.locationService = locationService;
+    }
 
     @Override
     public Location getLocation(CreateOrderDto createOrderDto) {
 
-        List<Stock> allStocks = stockService.readStocks();
-        List<OrderDetail> requiredProducts = createOrderDto.getOrderDetailList();
+        List<Location> availableLocationsList = locationService.getAvailableLocationsForOrder(createOrderDto);
 
-        for(Stock stock : allStocks) {
+        if(availableLocationsList.isEmpty()) {
 
-            boolean hasAllProductsFlag = true;
-
-            for(OrderDetail orderDetail : requiredProducts) {
-
-                if(stock.getProduct().getId() != orderDetail.getProduct().getId() || stock.getQuantity() < orderDetail.getQuantity()) {
-
-                    hasAllProductsFlag = false;
-                }
-            }
-            if(hasAllProductsFlag) {
-
-                return stock.getLocation();
-            }
+            return null;
         }
+        else {
 
-        return null;
+            return availableLocationsList.get(0);
+        }
     }
 }

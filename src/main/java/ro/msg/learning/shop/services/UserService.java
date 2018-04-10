@@ -14,15 +14,18 @@ import java.util.List;
 @Service
 public class UserService {
 
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public void saveUser(User user) {
 
         userRepository.save(encodePassword(user));
-        //userRepository.save(user);
     }
 
     public List<User> readUsers() {

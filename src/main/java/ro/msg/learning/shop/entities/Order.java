@@ -21,7 +21,6 @@ public class Order {
 
     @ManyToOne(cascade = CascadeType.ALL, optional=false)
     @JoinColumn(name="location_id")
-    @JsonIgnore
     private Location shippedFrom;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -32,7 +31,7 @@ public class Order {
     @Embedded
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
+    @OneToMany(mappedBy = "order")
     @JsonIgnore
     private List<OrderDetail> orderDetails;
 

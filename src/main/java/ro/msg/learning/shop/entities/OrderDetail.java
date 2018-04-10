@@ -24,7 +24,7 @@ public class OrderDetail {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
-    @JsonIgnore
+    //@JsonIgnore
     private Product product;
 
     private int quantity;
