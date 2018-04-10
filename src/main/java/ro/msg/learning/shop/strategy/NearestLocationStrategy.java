@@ -101,13 +101,11 @@ public class NearestLocationStrategy implements LocationStrategy {
             elementList.add(elementsArray[0]);
         }
 
-        Element[] elements = elementList.toArray(new Element[elementList.size()]);
-
-        int minDistance = distanceToInt(elements[0].getDistance());
+        int minDistance = distanceToInt(elementList.get(0).getDistance());
         int index = 0;
         int minIndex = 0;
 
-        for(Element element :elements) {
+        for(Element element : elementList) {
 
             Distance distance = element.getDistance();
             int distanceKm = distanceToInt(distance);
