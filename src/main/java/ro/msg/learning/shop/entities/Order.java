@@ -8,19 +8,17 @@ import java.util.List;
 
 @Entity
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "orders")
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @ManyToOne(cascade = CascadeType.ALL, optional=false)
-    @JoinColumn(name="location_id")
+    @JoinColumn(name="shipped_from")
     private Location shippedFrom;
 
     @ManyToOne(cascade = CascadeType.ALL)

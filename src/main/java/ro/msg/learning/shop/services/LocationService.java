@@ -1,9 +1,9 @@
 package ro.msg.learning.shop.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.dto.CreateOrderDto;
+import org.springframework.transaction.annotation.Transactional;
+import ro.msg.learning.shop.dto.OrderDto;
 import ro.msg.learning.shop.entities.*;
 import ro.msg.learning.shop.repositories.LocationRepository;
 
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class LocationService {
 
     private final StockService stockService;
@@ -22,34 +23,20 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
-    public Location readLocation(int locationId) {
+    private List<Location> readLocations() {
 
-        return locationRepository.findOne(locationId);
-    }
-
-    public List<Location> readLocations() {
-
-        Iterable<Location> iterableLocations = locationRepository.findAll();
-        List<Location> locationList = new ArrayList<>();
-
-        if(iterableLocations != null) {
-            for(Location location : iterableLocations) {
-                locationList.add(location);
-            }
-        }
-
-        return locationList;
+        return locationRepository.findAll();
     }
 
     public Location getLocationByAddress(Address address) {
 
         List<Location> locationList = readLocations();
 
-        for(Location location : locationList) {
+        for (Location location : locationList) {
 
-            if(address.getAddressStreet().equalsIgnoreCase(location.getAddress().getAddressStreet())
-            && address.getAddressCity().equalsIgnoreCase(location.getAddress().getAddressCity())
-            && address.getAddressCountry().equalsIgnoreCase(location.getAddress().getAddressCountry())) {
+            if (address.getAddressStreet().equalsIgnoreCase(location.getAddress().getAddressStreet())
+                    && address.getAddressCity().equalsIgnoreCase(location.getAddress().getAddressCity())
+                    && address.getAddressCountry().equalsIgnoreCase(location.getAddress().getAddressCountry())) {
 
                 return location;
             }
@@ -58,84 +45,58 @@ public class LocationService {
         return null;
     }
 
-    public List<Location> getAvailableLocationsForOrder(CreateOrderDto createOrderDto) {
+    public List<Location> getAvailableLocationsForOrder(OrderDto createOrderDto) {
 
         List<Stock> allStocks = stockService.readStocks();
-        List<OrderDetail> requiredProducts = createOrderDto.getOrderDetailList();
-        List<Location> availableLocationsList = new ArrayList<>();
-
-        for(Stock stock : allStocks) {
-
-            availableLocationsList.add(stock.getLocation());
-        }
+        List<OrderDetail> requiredOrders = createOrderDto.getOrderDetailList();
 
         // location list for product 1, where can we find them
+        List<Location> firstProductLocationsList = new ArrayList<>();
 
-        List<Location> firstProductLocations = new ArrayList<>();
+        OrderDetail firstProduct = requiredOrders.get(0);
 
-        OrderDetail firstProduct = requiredProducts.get(0);
+        for (Stock stock : allStocks) {
 
-        for(Stock stock : allStocks) {
+            if (stock.getProduct().getId() == firstProduct.getProduct().getId()
+                    && stock.getQuantity() >= firstProduct.getQuantity()) {
 
-            if(stock.getProduct().getId() == firstProduct.getProduct().getId() && stock.getQuantity() >= firstProduct.getQuantity()) {
-
-                firstProductLocations.add(stock.getLocation());
-            }
-            else {
-
-                availableLocationsList.remove(stock.getLocation());
+                firstProductLocationsList.add(stock.getLocation());
             }
         }
 
+        List<Location> resultList = new ArrayList<>(firstProductLocationsList);
 
-        for(Location location : firstProductLocations) {
+        for (Location currentLocation : firstProductLocationsList) {
 
             // at this locations we can find the first product, we have to check to other products
+            for (OrderDetail orderDetail : requiredOrders) {
 
-            for(OrderDetail orderDetail : requiredProducts) {
+                //we have a required product, check if it's available at the location, if not, remove location
+                if (!productAvailableAtLocation(orderDetail.getProduct(), orderDetail.getQuantity(), currentLocation)) {
 
-                //we have a required product, check if it's aviable at the location, if not, remove location
-
-                if(!productAviableAtLocation(orderDetail.getProduct(), orderDetail.getQuantity(), location)) {
-
-                    availableLocationsList.remove(location);
+                    resultList.remove(currentLocation);
+                    break;
                 }
             }
         }
 
-        return availableLocationsList;
+        return resultList;
     }
 
 
-    private boolean productAviableAtLocation(Product product, int quantity, Location location) {
-
+    private boolean productAvailableAtLocation(Product product, int quantity, Location location) {
 
         List<Stock> stockListAtLocation = stockService.getStockList(location.getId());
 
-        for(Stock stock : stockListAtLocation) {
+        for (Stock stock : stockListAtLocation) {
 
-            if(stock.getProduct().getId() == product.getId() && stock.getQuantity() >= quantity) {
+            if (stock.getProduct().getId() == product.getId() && stock.getQuantity() >= quantity) {
 
                 return true;
             }
         }
 
         return false;
-    }
-
-    public Location saveLocation(Location location) {
-
-        return locationRepository.save(location);
-    }
-
-    public void deleteLocation(int locationId) {
-
-        locationRepository.delete(locationId);
-    }
-
-    public void deleteAllLocations() {
-
-        locationRepository.deleteAll();
     }
 
 }

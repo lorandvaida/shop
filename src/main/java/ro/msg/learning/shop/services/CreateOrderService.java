@@ -1,44 +1,45 @@
 package ro.msg.learning.shop.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.dto.CreateOrderDto;
+import org.springframework.transaction.annotation.Transactional;
+import ro.msg.learning.shop.config.StrategyConfig;
+import ro.msg.learning.shop.dto.OrderDto;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Order;
 import ro.msg.learning.shop.exceptions.NoLocationException;
 import ro.msg.learning.shop.repositories.OrderRepository;
-import ro.msg.learning.shop.strategy.LocationContext;
 import ro.msg.learning.shop.strategy.LocationStrategy;
 import ro.msg.learning.shop.strategy.NearestLocationStrategy;
 import ro.msg.learning.shop.strategy.SingleLocationStrategy;
 
 @Service
+@Transactional
 public class CreateOrderService {
 
     private final OrderRepository orderRepository;
     private final StockService stockService;
     private final SingleLocationStrategy singleLocationStrategy;
     private final NearestLocationStrategy nearestLocationStrategy;
-
-    @Value("${strategyType}")
-    private String strategyType;
+    private final StrategyConfig strategyConfig;
 
     @Autowired
     public CreateOrderService(OrderRepository orderRepository, StockService stockService,
-                              SingleLocationStrategy singleLocationStrategy, NearestLocationStrategy nearestLocationStrategy) {
+                              SingleLocationStrategy singleLocationStrategy,
+                              NearestLocationStrategy nearestLocationStrategy, StrategyConfig strategyConfig) {
         this.orderRepository = orderRepository;
         this.stockService = stockService;
         this.singleLocationStrategy = singleLocationStrategy;
         this.nearestLocationStrategy = nearestLocationStrategy;
+        this.strategyConfig = strategyConfig;
     }
 
-    public Order createOrder(CreateOrderDto createOrderDto) throws NoLocationException {
+    public Order createOrder(OrderDto createOrderDto) throws NoLocationException {
 
+        LocationStrategy locationStrategy = strategyConfig.loadStrategy(singleLocationStrategy,
+                nearestLocationStrategy);
 
-        LocationContext locationContext = new LocationContext(loadStrategy(), createOrderDto);
-        Location location = locationContext.getLocation();
+        Location location = locationStrategy.getLocation(createOrderDto);
 
         if (location != null) {
 
@@ -57,22 +58,8 @@ public class CreateOrderService {
             return order;
         } else {
 
-            throw new NoLocationException(location.getId());
+            throw new NoLocationException();
         }
-    }
-
-    public LocationStrategy loadStrategy() {
-
-        switch (strategyType) {
-
-            case "SingleLocationStrategy":
-                return singleLocationStrategy;
-            case "NearestLocationStrategy":
-                return nearestLocationStrategy;
-            default:
-                return nearestLocationStrategy;
-        }
-
     }
 
 }

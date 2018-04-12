@@ -1,36 +1,23 @@
 package ro.msg.learning.shop.strategy;
 
-import com.google.maps.DirectionsApi;
-import com.google.maps.DistanceMatrixApi;
-import com.google.maps.DistanceMatrixApiRequest;
-import com.google.maps.GeoApiContext;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.DistanceMatrix;
-import com.google.maps.model.LatLng;
-import com.google.maps.model.TravelMode;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import ro.msg.learning.shop.dto.CreateOrderDto;
+import ro.msg.learning.shop.dto.OrderDto;
 import ro.msg.learning.shop.entities.Address;
 import ro.msg.learning.shop.entities.Location;
-import ro.msg.learning.shop.entities.OrderDetail;
-import ro.msg.learning.shop.entities.Stock;
 import ro.msg.learning.shop.mapper.Distance;
 import ro.msg.learning.shop.mapper.Element;
 import ro.msg.learning.shop.mapper.LocationMapper;
 import ro.msg.learning.shop.mapper.Row;
 import ro.msg.learning.shop.services.LocationService;
-import ro.msg.learning.shop.services.StockService;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Component
@@ -45,6 +32,9 @@ public class NearestLocationStrategy implements LocationStrategy {
     private int port;
     @Value("${api.key}")
     private String API_KEY;
+    private static final String urlOrigins = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=";
+    private static final String urlDestinations = "&destinations=";
+    private static final String urlKey = "&key=";
 
     @Autowired
     public NearestLocationStrategy(LocationService locationService) {
@@ -52,7 +42,7 @@ public class NearestLocationStrategy implements LocationStrategy {
     }
 
     @Override
-    public Location getLocation(CreateOrderDto createOrderDto) {
+    public Location getLocation(OrderDto createOrderDto) {
 
         List<Location> availableLocationsList = locationService.getAvailableLocationsForOrder(createOrderDto);
 
@@ -61,12 +51,13 @@ public class NearestLocationStrategy implements LocationStrategy {
         clientHttpReq.setProxy(proxy);
 
         String origins = parseAvailableLocationsToString(availableLocationsList);
-        String destionations = createOrderDto.getDeliveryAddress().getAddressStreet() + " " + createOrderDto.getDeliveryAddress().getAddressCity();
+        String destinations = createOrderDto.getDeliveryAddress().getAddressStreet() + " " + createOrderDto.
+                getDeliveryAddress().getAddressCity();
 
-        String url="https://maps.googleapis.com/maps/api/distancematrix/json?origins="+origins+"&destinations="+destionations+"&key="+ API_KEY;
+        String url = urlOrigins + origins + urlDestinations + destinations + urlKey + API_KEY;
 
         RestTemplate restTemplate = new RestTemplate(clientHttpReq);
-        LocationMapper mappedLocations = restTemplate.getForObject(url , LocationMapper.class);
+        LocationMapper mappedLocations = restTemplate.getForObject(url, LocationMapper.class);
 
         return getNearestLocationFromMapper(mappedLocations);
     }
@@ -75,7 +66,7 @@ public class NearestLocationStrategy implements LocationStrategy {
 
         StringBuilder sb = new StringBuilder();
 
-        for(Location location : availableLocationsList) {
+        for (Location location : availableLocationsList) {
 
             sb.append(location.getAddress().getAddressStreet());
             sb.append(" ");
@@ -86,7 +77,7 @@ public class NearestLocationStrategy implements LocationStrategy {
         String result = sb.toString();
 
         //deletes the last '|' character
-        return result.substring(0, result.length()-1);
+        return result.substring(0, result.length() - 1);
     }
 
     private Location getNearestLocationFromMapper(LocationMapper mappedLocations) {
@@ -95,7 +86,7 @@ public class NearestLocationStrategy implements LocationStrategy {
         Row[] rows = mappedLocations.getRows();
         List<Element> elementList = new ArrayList<>();
 
-        for(Row row : rows) {
+        for (Row row : rows) {
 
             Element[] elementsArray = row.getElements();
             elementList.add(elementsArray[0]);
@@ -105,12 +96,12 @@ public class NearestLocationStrategy implements LocationStrategy {
         int index = 0;
         int minIndex = 0;
 
-        for(Element element : elementList) {
+        for (Element element : elementList) {
 
             Distance distance = element.getDistance();
             int distanceKm = distanceToInt(distance);
 
-            if(distanceKm < minDistance) {
+            if (distanceKm < minDistance) {
 
                 minDistance = distanceKm;
                 minIndex = index;
@@ -126,7 +117,7 @@ public class NearestLocationStrategy implements LocationStrategy {
 
     private int distanceToInt(Distance distance) {
 
-        return (int) distance.getValue()/100;
+        return (int) distance.getValue() / 1000;
     }
 
 

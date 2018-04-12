@@ -1,26 +1,24 @@
 package ro.msg.learning.shop.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Null;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Locale;
 
 @Entity
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "products")
 public class Product implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     private String name;
@@ -32,12 +30,12 @@ public class Product implements Serializable {
     private double weight;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_category_id")
+    @JoinColumn(name = "product_category")
     @JsonIgnore
     private ProductCategory category;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "supplier_id")
+    @JoinColumn(name = "supplier")
     @JsonIgnore
     private Supplier supplier;
 

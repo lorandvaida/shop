@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value= HttpStatus.NOT_FOUND) //404
 public class NoLocationException extends RuntimeException {
 
-    public NoLocationException(int locationId) {
+    public NoLocationException() {
 
-        super("No location found with: " + locationId);
+        super("No location found!");
     }
 }

@@ -10,11 +10,12 @@ import java.io.*;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-public class CsvUtil {
+class CsvUtil {
 
-    public static <T> void writeToCsv(T type, Class<T> myClass, List<T> inputPojoList, OutputStream outputStream) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+    public static <T> void writeToCsv(T type, Class<T> myClass, List<T> inputPojoList, OutputStream outputStream)
+            throws IOException {
 
-        Class typeClass = (Class<T>) ((ParameterizedType) type).getActualTypeArguments()[0];
+        Class typeClass  = (Class<T>) ((ParameterizedType) type).getActualTypeArguments()[0];
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = mapper.schemaFor(typeClass);
         schema = schema.withColumnSeparator(',');
@@ -22,14 +23,14 @@ public class CsvUtil {
         objectWriter.writeValue(outputStream, inputPojoList);
     }
 
-    public static <T> List<T> readFromCsv(T type, Class<T> myClass, InputStream inputStream) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+    public static <T> List<T> readFromCsv(T type, Class<T> myClass, InputStream inputStream) throws IOException {
 
         Class typeClass = (Class<T>) ((ParameterizedType) type).getActualTypeArguments()[0];
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = mapper.schemaFor(typeClass);
         schema = schema.withColumnSeparator(',');
 
-        ObjectReader objectReader = mapper.reader(typeClass).with(schema);
+        ObjectReader objectReader = mapper.readerFor(typeClass).with(schema);
 
         Reader reader = new InputStreamReader(inputStream);
         MappingIterator<T> mappingIterator = objectReader.readValues(reader);

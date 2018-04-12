@@ -1,20 +1,16 @@
 package ro.msg.learning.shop.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ro.msg.learning.shop.entities.Address;
 import ro.msg.learning.shop.entities.OrderDetail;
 
 import java.sql.Timestamp;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOrderDto {
+public class OrderDto {
 
     private Timestamp orderTimestamp;
     private Address deliveryAddress;

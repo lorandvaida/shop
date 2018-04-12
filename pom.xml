@@ -76,7 +76,16 @@
 			<artifactId>google-maps-services</artifactId>
 			<version>0.1.1</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>23.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>5.0.7</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -84,22 +93,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.flywaydb</groupId>
-				<artifactId>flyway-maven-plugin</artifactId>
-				<version>5.0.7</version>
-				<configuration>
-					<url>jdbc:h2:file:./target/foobar</url>
-					<user>sa</user>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>com.h2database</groupId>
-						<artifactId>h2</artifactId>
-						<version>1.4.191</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

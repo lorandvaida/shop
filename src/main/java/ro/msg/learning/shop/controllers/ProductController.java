@@ -1,28 +1,16 @@
 package ro.msg.learning.shop.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.http.HttpEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import ro.msg.learning.shop.ShopApplication;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ro.msg.learning.shop.dto.ProductDto;
 import ro.msg.learning.shop.entities.Product;
-import ro.msg.learning.shop.entities.ProductCategory;
-import ro.msg.learning.shop.entities.Supplier;
-import ro.msg.learning.shop.repositories.ProductRepository;
-import ro.msg.learning.shop.services.ProductCategoryService;
 import ro.msg.learning.shop.services.ProductService;
-import ro.msg.learning.shop.services.SupplierService;
 import ro.msg.learning.shop.utils.ProductDtoMapper;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
 public class ProductController {
@@ -35,13 +23,13 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/products/{id}", method = RequestMethod.GET)
-    public Product getPproduct(@PathVariable("id") int productId) {
+    public Product getProduct(@PathVariable("id") int productId) {
 
         return productService.readProduct(productId);
     }
 
     @RequestMapping(value = "/products", method = RequestMethod.GET)
-    public List<ProductDto> getPproducts() {
+    public List<ProductDto> getProducts() {
 
         return ProductDtoMapper.productListToProductDtoList(productService.readProducts());
     }

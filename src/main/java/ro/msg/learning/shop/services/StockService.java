@@ -2,7 +2,7 @@ package ro.msg.learning.shop.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.dto.CreateOrderDto;
+import org.springframework.transaction.annotation.Transactional;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.OrderDetail;
 import ro.msg.learning.shop.entities.Product;
@@ -14,52 +14,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class StockService {
 
     private final StockRepository stockRepository;
 
     @Autowired
     public StockService(StockRepository stockRepository) {
+
         this.stockRepository = stockRepository;
     }
 
-    public Stock readStock(int stockId) {
+    private void subtractStock(Product product, int quantity, Location location) {
 
-        return stockRepository.findOne(stockId);
-    }
-
-    public void  subtractStock(Product product, int quantity, Location location) {
-
-        List<Stock> allStocks = readStocks();
-
-        for(Stock stock : allStocks) {
-
-            if(stock.getProduct().getId() == product.getId() && stock.getLocation().getId() == location.getId() ) {
-
-                stock.setQuantity(stock.getQuantity() - quantity);
-                stockRepository.save(stock);
-            }
-        }
+        stockRepository.updateStock(product.getId(), quantity, location.getId());
     }
 
     public List<Stock> getStockList(int locationId) {
 
-        List<Stock> allSotckList = readStocks();
+        List<Stock> allStockList = readStocks();
         List<Stock> resultStockList = new ArrayList<>();
 
-        for(Stock stock : allSotckList) {
+        for (Stock stock : allStockList) {
 
-            if(locationId == stock.getLocation().getId()) {
+            if (locationId == stock.getLocation().getId()) {
 
                 resultStockList.add(stock);
             }
         }
 
-        if(resultStockList.isEmpty()) {
+        if (resultStockList.isEmpty()) {
 
-            throw new NoLocationException(locationId);
-        }
-        else {
+            throw new NoLocationException();
+        } else {
 
             return resultStockList;
         }
@@ -67,7 +54,7 @@ public class StockService {
 
     public void subtractStock(List<OrderDetail> orderDetailList, Location location) {
 
-        for(OrderDetail orderDetail : orderDetailList) {
+        for (OrderDetail orderDetail : orderDetailList) {
 
             subtractStock(orderDetail.getProduct(), orderDetail.getQuantity(), location);
         }
@@ -75,31 +62,7 @@ public class StockService {
 
     public List<Stock> readStocks() {
 
-        Iterable<Stock> iterableStocks = stockRepository.findAll();
-        List<Stock> stockList = new ArrayList<>();
-
-        if(iterableStocks != null) {
-            for(Stock stock : iterableStocks) {
-                stockList.add(stock);
-            }
-        }
-
-        return stockList;
-    }
-
-    public Stock saveStock(Stock stock) {
-
-        return stockRepository.save(stock);
-    }
-
-    public void deleteStock(int stockId) {
-
-        stockRepository.delete(stockId);
-    }
-
-    public void deleteAllStocks() {
-
-        stockRepository.deleteAll();
+        return stockRepository.findAll();
     }
 
 }

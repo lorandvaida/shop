@@ -2,14 +2,14 @@ package ro.msg.learning.shop.strategy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ro.msg.learning.shop.dto.CreateOrderDto;
+import ro.msg.learning.shop.dto.OrderDto;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.services.LocationService;
 
 import java.util.List;
 
 @Component
-public class SingleLocationStrategy implements  LocationStrategy {
+public class SingleLocationStrategy implements LocationStrategy {
 
     private final LocationService locationService;
 
@@ -19,15 +19,14 @@ public class SingleLocationStrategy implements  LocationStrategy {
     }
 
     @Override
-    public Location getLocation(CreateOrderDto createOrderDto) {
+    public Location getLocation(OrderDto createOrderDto) {
 
         List<Location> availableLocationsList = locationService.getAvailableLocationsForOrder(createOrderDto);
 
-        if(availableLocationsList.isEmpty()) {
+        if (availableLocationsList.isEmpty()) {
 
             return null;
-        }
-        else {
+        } else {
 
             return availableLocationsList.get(0);
         }

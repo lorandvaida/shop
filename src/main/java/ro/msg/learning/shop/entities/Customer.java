@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Customer {
+class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

@@ -3,31 +3,27 @@ package ro.msg.learning.shop.utils;
 import ro.msg.learning.shop.dto.StockDto;
 import ro.msg.learning.shop.entities.Stock;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class StockDtoMapper {
 
-    public static StockDto stockToStockDto(Stock stock) {
-
-        StockDto stockDto = new StockDto();
-        stockDto.setProductName(stock.getProduct().getName());
-        stockDto.setLocationName(stock.getLocation().getName());
-        stockDto.setQuantity(stock.getQuantity());
-
-        return stockDto;
-    }
-
     public static List<StockDto> stockListToStockDtoList(List<Stock> stockList) {
 
-        List<StockDto> stockDtoList = new ArrayList<>();
+        Function<Stock, StockDto> stockToStockDto
+                = stock -> {
 
-        for(Stock stock : stockList) {
+            StockDto stockDto = new StockDto();
+            stockDto.setProductName(stock.getProduct().getName());
+            stockDto.setLocationName(stock.getLocation().getName());
+            stockDto.setQuantity(stock.getQuantity());
 
-            stockDtoList.add(stockToStockDto(stock));
-        }
+            return stockDto;
+        };
 
-        return stockDtoList;
+        return stockList.stream().map(stockToStockDto).collect(Collectors.toList());
+
     }
 
 }
