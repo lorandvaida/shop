@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS user_privilege;
 DROP TABLE IF EXISTS role_privileges;
 DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS revenue;
 
 CREATE TABLE IF NOT EXISTS products (
   id INT NOT NULL AUTO_INCREMENT,
@@ -70,4 +71,12 @@ CREATE TABLE IF NOT EXISTS orders (
   address_city VARCHAR(100),
   address_county VARCHAR(100),
   address_street VARCHAR(100),
+  order_date DATE,
+  PRIMARY KEY (id));
+
+CREATE TABLE IF NOT EXISTS revenue (
+  id INT NOT NULL AUTO_INCREMENT,
+  location_id INT,
+  revenue_date TIMESTAMP,
+  revenue_sum DOUBLE,
   PRIMARY KEY (id));

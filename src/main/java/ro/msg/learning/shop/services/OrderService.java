@@ -3,9 +3,11 @@ package ro.msg.learning.shop.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Order;
 import ro.msg.learning.shop.repositories.OrderRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -23,6 +25,11 @@ public class OrderService {
     public List<Order> readOrders() {
 
         return orderRepository.findAll();
+    }
+
+    public BigDecimal getRevenueSum(Location location) {
+
+        return orderRepository.getRevenueSum(location);
     }
 
 }

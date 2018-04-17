@@ -1,19 +1,26 @@
 package ro.msg.learning.shop.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import ro.msg.learning.shop.services.RevenueService;
 
 @Component
 public class RevenueCalculator {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    private final RevenueService revenueService;
 
-    @Scheduled(fixedRate = 10000)
+    @Autowired
+    public RevenueCalculator(RevenueService revenueService) {
+        this.revenueService = revenueService;
+    }
+
+
+    //cron = "[Seconds][Minutes][Hours][Day of month][Month][Day of week][Year]"
+    @Scheduled(cron = "0 00 00 * * ?")
     public void reportCurrentTime() {
 
-        System.out.println("The time is: " + dateFormat.format(new Date()));
+        revenueService.calculateRevenue();
     }
+
 }

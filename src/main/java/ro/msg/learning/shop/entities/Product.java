@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -25,7 +24,7 @@ public class Product implements Serializable {
 
     private String description;
 
-    private BigDecimal price;
+    private Double price;
 
     private double weight;
 
@@ -43,7 +42,7 @@ public class Product implements Serializable {
     @JsonIgnore
     private List<Stock> stocks;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<OrderDetail> orderDetails;
 
