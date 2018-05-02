@@ -1,8 +1,11 @@
 package ro.msg.learning.shop.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import ro.msg.learning.shop.services.LocationService;
 import ro.msg.learning.shop.strategy.LocationStrategy;
 import ro.msg.learning.shop.strategy.NearestLocationStrategy;
 import ro.msg.learning.shop.strategy.SingleLocationStrategy;
@@ -10,21 +13,26 @@ import ro.msg.learning.shop.strategy.SingleLocationStrategy;
 @Configuration
 public class StrategyConfig {
 
-    @Value("${strategyType}")
-    private String strategyType;
+    private final LocationService locationService;
+
+    @Autowired
+    public StrategyConfig(LocationService locationService) {
+        this.locationService = locationService;
+    }
 
     @Bean
-    public LocationStrategy loadStrategy(SingleLocationStrategy singleLocationStrategy, NearestLocationStrategy nearestLocationStrategy) {
+    @Primary
+    public LocationStrategy loadStrategy(@Value("${strategyType}") String strategyType) {
 
         switch (strategyType) {
 
             case "SingleLocationStrategy":
-                return singleLocationStrategy;
+                return new SingleLocationStrategy(locationService);
             case "NearestLocationStrategy":
-                return nearestLocationStrategy;
+                return new NearestLocationStrategy(locationService);
             default:
-                return nearestLocationStrategy;
+                return new SingleLocationStrategy(locationService);
         }
-
     }
+
 }

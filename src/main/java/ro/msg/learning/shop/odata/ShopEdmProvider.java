@@ -18,6 +18,7 @@ public class ShopEdmProvider extends EdmProvider {
     private static final FullQualifiedName ENTITY_TYPE_ORDER = new FullQualifiedName(NAMESPACE, ENTITY_NAME_ORDER);
     private static final FullQualifiedName ENTITY_TYPE_PRODUCT = new FullQualifiedName(NAMESPACE, ENTITY_NAME_PRODUCT);
     private static final FullQualifiedName COMPLEX_TYPE_ADDRESS = new FullQualifiedName(NAMESPACE, "Address");
+    private static final FullQualifiedName COMPLEX_TYPE_PRODUCT = new FullQualifiedName(NAMESPACE, "Product");
     private static final FullQualifiedName ASSOCIATION_ORDER_PRODUCT =
             new FullQualifiedName(NAMESPACE, "Order_Products_Product_Orders");
     private static final String ROLE_ORDER_PRODUCTS = "Order_Products";
@@ -40,6 +41,7 @@ public class ShopEdmProvider extends EdmProvider {
 
         List<ComplexType> complexTypes = new ArrayList<>();
         complexTypes.add(getComplexType(COMPLEX_TYPE_ADDRESS));
+        complexTypes.add(getComplexType(COMPLEX_TYPE_PRODUCT));
         schema.setComplexTypes(complexTypes);
 
         List<Association> associations = new ArrayList<>();
@@ -97,8 +99,8 @@ public class ShopEdmProvider extends EdmProvider {
             } else if (ENTITY_TYPE_PRODUCT.getName().equals(edmFQName.getName())) {
 
                 List<Property> properties = new ArrayList<>();
-                properties.add(new SimpleProperty().setName("productId").setType(EdmSimpleTypeKind.Int32)
-                        .setFacets(new Facets().setNullable(false)));
+                //properties.add(new SimpleProperty().setName("productId").setType(EdmSimpleTypeKind.Int32).setFacets(new Facets().setNullable(false)));
+                properties.add(new ComplexProperty().setName("product").setType(COMPLEX_TYPE_PRODUCT));
                 properties.add(new SimpleProperty().setName("quantity").setType(EdmSimpleTypeKind.Int32)
                         .setFacets(new Facets().setNullable(false)));
 
@@ -133,6 +135,18 @@ public class ShopEdmProvider extends EdmProvider {
             properties.add(new SimpleProperty().setName("addressStreet").setType(EdmSimpleTypeKind.String));
 
             return new ComplexType().setName(COMPLEX_TYPE_ADDRESS.getName()).setProperties(properties);
+        } else if (NAMESPACE.equals(edmFQName.getNamespace()) && COMPLEX_TYPE_PRODUCT.getName().equals(edmFQName.getName())) {
+
+            List<Property> properties = new ArrayList<>();
+            properties.add(new SimpleProperty().setName("id").setType(EdmSimpleTypeKind.Int32));
+            properties.add(new SimpleProperty().setName("name").setType(EdmSimpleTypeKind.String));
+            properties.add(new SimpleProperty().setName("description").setType(EdmSimpleTypeKind.String));
+            properties.add(new SimpleProperty().setName("price").setType(EdmSimpleTypeKind.Double));
+            properties.add(new SimpleProperty().setName("weight").setType(EdmSimpleTypeKind.Double));
+            properties.add(new SimpleProperty().setName("categoryName").setType(EdmSimpleTypeKind.String));
+            properties.add(new SimpleProperty().setName("supplierName").setType(EdmSimpleTypeKind.String));
+
+            return new ComplexType().setName(COMPLEX_TYPE_PRODUCT.getName()).setProperties(properties);
         }
 
         return null;

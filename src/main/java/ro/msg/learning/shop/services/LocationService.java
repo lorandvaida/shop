@@ -23,7 +23,7 @@ public class LocationService {
         this.locationRepository = locationRepository;
     }
 
-    private List<Location> readLocations() {
+    public List<Location> readLocations() {
 
         return locationRepository.findAll();
     }
@@ -98,5 +98,4 @@ public class LocationService {
 
         return false;
     }
-
 }

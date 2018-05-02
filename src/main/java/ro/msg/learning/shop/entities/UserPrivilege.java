@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class UserPrivilege {
+public class UserPrivilege {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
